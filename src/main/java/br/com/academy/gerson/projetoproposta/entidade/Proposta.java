@@ -13,7 +13,7 @@ import javax.validation.constraints.Positive;
 
 @Entity
 public class Proposta {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -29,6 +29,12 @@ public class Proposta {
 	private BigDecimal salario;
 	@NotBlank
 	private String endereco;
+
+	@Deprecated
+	public Proposta() {
+
+	}
+
 	public Proposta(@NotBlank String nome, @NotBlank String documento, @Email @NotBlank String email,
 			@NotNull @Positive BigDecimal salario, @NotBlank String endereco) {
 		super();
@@ -38,10 +44,9 @@ public class Proposta {
 		this.salario = salario;
 		this.endereco = endereco;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
-	
-	
+
 }
