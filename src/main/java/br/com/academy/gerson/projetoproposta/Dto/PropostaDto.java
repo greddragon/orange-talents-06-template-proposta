@@ -14,8 +14,8 @@ public class PropostaDto {
 
 	@NotBlank
 	private String nome;
-	@CpfCjpj
 	@NotBlank
+	@CpfCjpj
 	private String documento;
 	@Email
 	@NotBlank
