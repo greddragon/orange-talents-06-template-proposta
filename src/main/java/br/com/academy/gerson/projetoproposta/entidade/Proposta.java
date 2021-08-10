@@ -90,6 +90,15 @@ public class Proposta {
 	public String getNumeroCartao() {
 		return numeroCartao;
 	}
+	
+
+	public void setStatus(StatusProposta status) {
+		this.status = status;
+	}
+
+	public void setNumeroCartao(String numeroCartao) {
+		this.numeroCartao = numeroCartao;
+	}
 
 	public void analiseProposta(PropostaService propostaService) throws JsonMappingException, JsonProcessingException {
 
