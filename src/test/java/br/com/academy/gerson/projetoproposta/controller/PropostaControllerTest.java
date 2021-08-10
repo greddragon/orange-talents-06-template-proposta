@@ -1,5 +1,7 @@
 package br.com.academy.gerson.projetoproposta.controller;
 
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +16,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.academy.gerson.projetoproposta.Enumerated.ResultadoSolicitacao;
-import br.com.academy.gerson.projetoproposta.controller.feignClient.DadosSolicitante;
-import br.com.academy.gerson.projetoproposta.controller.feignClient.ResultadoAnalise;
-import br.com.academy.gerson.projetoproposta.controller.feignClient.SolicitacaoAnalise;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignDadosSolicitante;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ResultadoAnalise;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ModelFeignProposta;
 import feign.FeignException;
 
 @RunWith(SpringRunner.class)
@@ -26,19 +29,22 @@ class PropostaControllerTest {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	DadosSolicitante dadosSolicitante;
+	FeignApiCartoes cartaoes;
+
+	@Autowired
+	FeignDadosSolicitante dadosSolicitante;
 
 	@Test
 	void test() throws JsonMappingException, JsonProcessingException {
-		String documento = "36465665395";
+		String documento = "06465665395";
 		String nome = "gerson dos santos";
 		Long id = 1L;
 
 		ResultadoAnalise resultadoAnalise = null;
 
 		try {
-			SolicitacaoAnalise solicitacaoAnalise = new SolicitacaoAnalise(documento, nome, String.valueOf(id));
-			resultadoAnalise = dadosSolicitante.solicitacaoAnalise(solicitacaoAnalise);
+			ModelFeignProposta modelFeignProposta = new ModelFeignProposta(documento, nome, String.valueOf(id));
+			resultadoAnalise = dadosSolicitante.analiseProposta(modelFeignProposta);
 		} catch (FeignException e) {
 
 			String analise = e.contentUTF8();
@@ -47,11 +53,26 @@ class PropostaControllerTest {
 			logger.error("Response Body: " + e.contentUTF8());
 		}
 
-		SolicitacaoAnalise solicitacaoAnalise = new SolicitacaoAnalise(documento, nome, String.valueOf(id));
-		resultadoAnalise = dadosSolicitante.solicitacaoAnalise(solicitacaoAnalise);
+		ModelFeignProposta modelFeignProposta = new ModelFeignProposta(documento, nome, String.valueOf(id));
+		resultadoAnalise = dadosSolicitante.analiseProposta(modelFeignProposta);
 
 		Assert.assertNotNull(resultadoAnalise);
-		Assert.assertEquals(resultadoAnalise.getResultadoSolicitacao(), ResultadoSolicitacao.COM_RESTRICAO);
+		Assert.assertEquals(resultadoAnalise.getResultadoSolicitacao(), ResultadoSolicitacao.SEM_RESTRICAO);
 	}
 
+	@Test
+	void test2() {
+		String documento = "06465665395";
+		String nome = "gerson dos santos";
+		Long id = 1L;
+
+		//SolicitacaoAnalise solicitacaoAnalise = new SolicitacaoAnalise(documento, nome, String.valueOf(id));
+
+		//Map<String, Object> test = cartaoes.NovoCartao(solicitacaoAnalise);
+
+		Map<String, Object> testConsulta = cartaoes.consultaCartao(id);
+		
+		//Assert.assertNotNull(test);
+		Assert.assertNotNull(testConsulta);
+	}
 }

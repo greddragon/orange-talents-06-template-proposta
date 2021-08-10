@@ -1,8 +1,8 @@
-package br.com.academy.gerson.projetoproposta.controller.feignClient;
+package br.com.academy.gerson.projetoproposta.controller.feignClient.model;
 
 import javax.validation.constraints.NotBlank;
 
-public class SolicitacaoAnalise {
+public class ModelFeignProposta {
 
 	@NotBlank
 	private String documento;
@@ -11,7 +11,7 @@ public class SolicitacaoAnalise {
 	@NotBlank
 	private String idProposta;
 
-	public SolicitacaoAnalise(@NotBlank String documento, @NotBlank String nome, @NotBlank String idProposta) {
+	public ModelFeignProposta(@NotBlank String documento, @NotBlank String nome, @NotBlank String idProposta) {
 		super();
 		this.documento = documento;
 		this.nome = nome;

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.academy.gerson.projetoproposta.Enumerated.ResultadoSolicitacao;
 import br.com.academy.gerson.projetoproposta.Enumerated.StatusProposta;
-import br.com.academy.gerson.projetoproposta.controller.feignClient.ResultadoAnalise;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ResultadoAnalise;
 import br.com.academy.gerson.projetoproposta.service.PropostaService;
 
 @Entity
@@ -41,6 +41,8 @@ public class Proposta {
 	private String endereco;
 	@Enumerated(EnumType.STRING)
 	private StatusProposta status;
+	
+	private String numeroCartao;
 
 	@Deprecated
 	public Proposta() {
@@ -85,8 +87,8 @@ public class Proposta {
 		return status;
 	}
 
-	public void setStatus(StatusProposta status) {
-		this.status = status;
+	public String getNumeroCartao() {
+		return numeroCartao;
 	}
 
 	public void analiseProposta(PropostaService propostaService) throws JsonMappingException, JsonProcessingException {
@@ -97,6 +99,8 @@ public class Proposta {
 			this.status = StatusProposta.NAO_ELEGIVEL;
 		} else {
 			this.status = StatusProposta.ELEGIVEL;
+			this.numeroCartao = propostaService.associaCartao(this);
+
 		}
 
 	}

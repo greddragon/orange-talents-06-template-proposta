@@ -1,4 +1,4 @@
-package br.com.academy.gerson.projetoproposta.controller.feignClient;
+package br.com.academy.gerson.projetoproposta.controller.feignClient.model;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

@@ -52,6 +52,7 @@ public class PropostaController {
 		repository.save(proposta);
 
 		proposta.analiseProposta(propostaService);
+		
 
 		URI uriPropostaComSucesso = uriBuilder.path("/propostas/{id}").build(proposta.getId());
 
@@ -59,6 +60,7 @@ public class PropostaController {
 				proposta.getSalario());
 
 		return ResponseEntity.created(uriPropostaComSucesso).build();
+		
 	}
 
 }
