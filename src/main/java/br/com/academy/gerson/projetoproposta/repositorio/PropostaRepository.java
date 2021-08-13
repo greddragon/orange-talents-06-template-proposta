@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import br.com.academy.gerson.projetoproposta.entidade.Proposta;
 
 @Repository
-public interface PropostaRepository extends JpaRepository<Proposta, Long>{
+public interface PropostaRepository extends JpaRepository<Proposta, Long> {
 
 	Optional<Proposta> findByDocumento(String documento);
-	
+
 }

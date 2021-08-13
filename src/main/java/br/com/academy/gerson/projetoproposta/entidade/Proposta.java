@@ -41,7 +41,7 @@ public class Proposta {
 	private String endereco;
 	@Enumerated(EnumType.STRING)
 	private StatusProposta status;
-	
+
 	private String numeroCartao;
 
 	@Deprecated
@@ -90,7 +90,6 @@ public class Proposta {
 	public String getNumeroCartao() {
 		return numeroCartao;
 	}
-	
 
 	public void setStatus(StatusProposta status) {
 		this.status = status;

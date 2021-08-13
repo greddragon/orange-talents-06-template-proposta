@@ -50,17 +50,16 @@ public class PropostaService {
 
 	}
 
-	public  String associaCartao(Proposta proposta) {
-		
+	public String associaCartao(Proposta proposta) {
+
 		ModelFeignProposta model = new ModelFeignProposta(proposta.getDocumento(), proposta.getNome(),
 				String.valueOf(proposta.getId()));
-		
+
 		cartaoes.NovoCartao(model);
 
-		
 		Map<String, Object> cartao = cartaoes.consultaCartao(proposta.getId());
 		String numeroCartao = cartao.get("id").toString();
-		
+
 		return numeroCartao;
 	}
 

@@ -54,7 +54,6 @@ public class PropostaController {
 		repository.save(proposta);
 
 		proposta.analiseProposta(propostaService);
-		
 
 		URI uriPropostaComSucesso = uriBuilder.path("/propostas/{id}").build(proposta.getId());
 
@@ -62,18 +61,19 @@ public class PropostaController {
 				proposta.getSalario());
 
 		return ResponseEntity.created(uriPropostaComSucesso).build();
-		
+
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<?> consultaProposta(@PathVariable Long id){
-		
+	public ResponseEntity<?> consultaProposta(@PathVariable Long id) {
+
 		Optional<Proposta> proposta = repository.findById(id);
-		
-		if(!proposta.isPresent()) {
+
+		if (!proposta.isPresent()) {
+			logger.error("proposta não existe");
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-		
+
 		return ResponseEntity.ok().body(proposta);
 	}
 

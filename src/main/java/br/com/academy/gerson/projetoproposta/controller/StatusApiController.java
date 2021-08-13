@@ -16,22 +16,22 @@ import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignHealthA
 @RestController
 @RequestMapping("/saude-api")
 public class StatusApiController {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	FeignHealthActuator health;
-	
+
 	@GetMapping
-	public ResponseEntity<?> saudeApi(){
-		
+	public ResponseEntity<?> saudeApi() {
+
 		Map<String, Object> status = health.healthStatus();
-		
-		if(!status.containsValue("UP")) {
+
+		if (!status.containsValue("UP")) {
 			logger.error("API não esta funcionando corretamente, status: " + status.get("status"));
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(status);
 		}
-		
+
 		return ResponseEntity.ok().body(status);
 	}
 }

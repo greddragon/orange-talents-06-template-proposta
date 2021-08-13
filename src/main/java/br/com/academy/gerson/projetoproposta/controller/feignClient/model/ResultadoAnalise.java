@@ -16,8 +16,7 @@ public class ResultadoAnalise {
 	private ResultadoSolicitacao resultadoSolicitacao;
 	@NotBlank
 	private String idProposta;
-	
-	
+
 	public ResultadoAnalise() {
 		super();
 	}

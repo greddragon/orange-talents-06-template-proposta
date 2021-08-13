@@ -3,7 +3,7 @@ package br.com.academy.gerson.projetoproposta.controller.handlerAdvice;
 import java.util.Collection;
 
 public class ErroMensagem {
-	
+
 	private Collection<String> mensagens;
 
 	public ErroMensagem(Collection<String> mensagens) {
@@ -14,6 +14,5 @@ public class ErroMensagem {
 	public Collection<String> getMensagens() {
 		return mensagens;
 	}
-	
-	
+
 }
