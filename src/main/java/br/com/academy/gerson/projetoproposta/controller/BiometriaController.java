@@ -25,7 +25,7 @@ import br.com.academy.gerson.projetoproposta.entidade.Biometria;
 import br.com.academy.gerson.projetoproposta.repositorio.BiometriaRepository;
 
 @RestController
-@RequestMapping("/biometria/")
+@RequestMapping("api/proposta/biometria/")
 public class BiometriaController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());

@@ -29,7 +29,7 @@ import br.com.academy.gerson.projetoproposta.repositorio.PropostaRepository;
 import br.com.academy.gerson.projetoproposta.service.PropostaService;
 
 @RestController
-@RequestMapping("/propostas")
+@RequestMapping("api/propostas")
 public class PropostaController {
 
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);

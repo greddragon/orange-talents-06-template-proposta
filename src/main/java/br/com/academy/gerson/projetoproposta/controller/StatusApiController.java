@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignHealthActuator;
 
 @RestController
-@RequestMapping("/saude-api")
+@RequestMapping("api/propostas/saude-api")
 public class StatusApiController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
