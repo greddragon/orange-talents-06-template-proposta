@@ -57,7 +57,7 @@ public class PropostaService {
 
 		cartaoes.NovoCartao(model);
 
-		Map<String, Object> cartao = cartaoes.consultaCartao(proposta.getId());
+		Map<String, Object> cartao = cartaoes.consultaCartaoProposta(proposta.getId());
 		String numeroCartao = cartao.get("id").toString();
 
 		return numeroCartao;

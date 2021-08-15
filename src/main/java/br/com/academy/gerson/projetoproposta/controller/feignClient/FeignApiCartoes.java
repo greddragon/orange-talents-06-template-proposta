@@ -17,12 +17,15 @@ import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ModelF
 public interface FeignApiCartoes {
 
 	@GetMapping(value = "api/cartoes", consumes = "application/json")
-	Map<String, Object> consultaCartao(@RequestParam(name = "idProposta") Long id);
+	Map<String, Object> consultaCartaoProposta(@RequestParam(name = "idProposta") Long id);
 
 	@PostMapping(value = "api/cartoes", consumes = "application/json")
 	void NovoCartao(@RequestBody @Valid ModelFeignProposta novo);
 
 	@GetMapping(value = "api/cartoes/{id}", consumes = "application/json")
 	Map<String, Object> consultaNumeroCartao(@PathVariable String id);
+	
+	@PostMapping(value = "api/cartoes/{id}/bloqueios", consumes = "application/json")
+	Map<String, Object> bloqueioCartao(@PathVariable String id);
 
 }
