@@ -1,11 +1,9 @@
 package br.com.academy.gerson.projetoproposta.controller;
 
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,24 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignActuator;
 
 @RestController
-@RequestMapping("api/propostas/saude-api")
-public class StatusApiController {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
+@RequestMapping("api/propostas/metricas")
+public class MetricasController {
+	
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
-	FeignActuator health;
-
+	FeignActuator prometheus;
+	
 	@GetMapping
 	public ResponseEntity<?> saudeApi() {
 
-		Map<String, Object> status = health.healthStatus();
+		String status = prometheus.prometheus();
 
-		if (!status.containsValue("UP")) {
-			logger.error("API não esta funcionando corretamente, status: " + status.get("status"));
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(status);
-		}
-
+		
+		logger.info("metricas coletadas com sucesso");
 		return ResponseEntity.ok().body(status);
 	}
+
 }
