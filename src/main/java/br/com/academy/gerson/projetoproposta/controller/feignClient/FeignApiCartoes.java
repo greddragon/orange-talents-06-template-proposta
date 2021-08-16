@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ModelFeignProposta;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoAvisoViagem;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoBloqueio;
 
 @FeignClient(name = "api-cartao", url = "http://localhost:8888/", configuration = FeignConfig.class)
@@ -28,5 +29,8 @@ public interface FeignApiCartoes {
 	
 	@PostMapping(value = "api/cartoes/{id}/bloqueios", consumes = "application/json")
 	Map<String, Object> bloqueioCartao(@PathVariable String id, @RequestBody @Valid SolicitacaoBloqueio solicitacaoBloqueio);
+	
+	@PostMapping(value = "api/cartoes/{id}/avisos", consumes="application/json")
+	Map<String, Object> avisoViagem(@PathVariable String id, @RequestBody @Valid  SolicitacaoAvisoViagem aviso);
 
 }

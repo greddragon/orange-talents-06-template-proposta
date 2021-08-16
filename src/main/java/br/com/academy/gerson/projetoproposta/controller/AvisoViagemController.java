@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoAvisoViagem;
+import br.com.academy.gerson.projetoproposta.controller.handlerAdvice.ErroException;
 import br.com.academy.gerson.projetoproposta.entidade.AvisoViagem;
 import br.com.academy.gerson.projetoproposta.repositorio.AvisoViagemRepository;
 
@@ -32,7 +33,7 @@ import br.com.academy.gerson.projetoproposta.repositorio.AvisoViagemRepository;
 public class AvisoViagemController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	private AvisoViagemRepository repository;
 
@@ -56,16 +57,32 @@ public class AvisoViagemController {
 		String ipCliente = pegaIpClient(request);
 
 		AvisoViagem aviso = solicitacao.toAviso(id_cartao, userAgent, ipCliente);
-		
+
+		Map<String, Object> avisoViagemComSucesso = avisarViagem(id_cartao, solicitacao);
+
 		try {
 			repository.save(aviso);
 		} catch (Exception e) {
 			logger.error("Ocorreu algum problema: " + e);
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		
+
 		logger.info("Aviso de viagem armazenado no sistema com sucesso.");
+		logger.info("Aviso de viagem: " + avisoViagemComSucesso);
 		return ResponseEntity.ok().build();
+	}
+
+	private Map<String, Object> avisarViagem(String id_cartao, @Valid SolicitacaoAvisoViagem solicitacao) {
+		Map<String, Object> avisoViagemComSucesso = null;
+
+		try {
+			avisoViagemComSucesso = cartoes.avisoViagem(id_cartao, solicitacao);
+		} catch (Exception e) {
+			logger.error("Não foi possível realizar o aviso de viagem, tente novamente. Talvez a data já esteja cadastrada");
+			throw new ErroException(HttpStatus.INTERNAL_SERVER_ERROR, "Data já cadastrada, não pode haver iguais");
+		}
+
+		return avisoViagemComSucesso;
 	}
 
 	private String pegaIpClient(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
