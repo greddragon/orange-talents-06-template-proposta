@@ -2,10 +2,10 @@ package br.com.academy.gerson.projetoproposta.controller;
 
 import java.util.Base64;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,25 +23,26 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
-import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoBloqueio;
-import br.com.academy.gerson.projetoproposta.entidade.BloqueioCartao;
-import br.com.academy.gerson.projetoproposta.repositorio.BloqueioCartaoRepository;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoAvisoViagem;
+import br.com.academy.gerson.projetoproposta.entidade.AvisoViagem;
+import br.com.academy.gerson.projetoproposta.repositorio.AvisoViagemRepository;
 
 @RestController
-@RequestMapping("api/cartao/bloqueio")
-public class BloqueioController {
+@RequestMapping("api/cartao/aviso")
+public class AvisoViagemController {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
-
+	
 	@Autowired
-	private BloqueioCartaoRepository repository;
+	private AvisoViagemRepository repository;
 
 	@Autowired
 	private FeignApiCartoes cartoes;
 
 	@PostMapping("/{id_cartao}")
 	@Transactional
-	public ResponseEntity<?> bloqueioCartao(@PathVariable String id_cartao, HttpServletRequest request)
+	public ResponseEntity<?> avisoViagem(@PathVariable String id_cartao,
+			@RequestBody @Valid SolicitacaoAvisoViagem solicitacao, HttpServletRequest request)
 			throws JsonMappingException, JsonProcessingException {
 
 		try {
@@ -50,39 +52,20 @@ public class BloqueioController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
-		Optional<BloqueioCartao> cartaoBloqueado = repository.findByNumeroCartao(id_cartao);
-		if (cartaoBloqueado.isPresent()) {
-			logger.error("Cartão já está bloqueado");
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		}
-
 		String userAgent = request.getHeader("User-Agent");
 		String ipCliente = pegaIpClient(request);
-		BloqueioCartao bloqueioCartao = new BloqueioCartao(id_cartao, ipCliente, userAgent);
 
-		Map<String, Object> cartaoBloqueadoComSucesso = bloquearCartao(bloqueioCartao);
-
-		repository.save(bloqueioCartao);
-		logger.info("bloqueio do cartão: " + cartaoBloqueadoComSucesso);
-		return ResponseEntity.ok().build();
-	}
-
-	private Map<String, Object> bloquearCartao(BloqueioCartao bloqueioCartao) {
-
-		SolicitacaoBloqueio solicitacao = new SolicitacaoBloqueio(bloqueioCartao.getUserAgent());
-		Map<String, Object> cartaoBloqueadoComSucesso = null;
+		AvisoViagem aviso = solicitacao.toAviso(id_cartao, userAgent, ipCliente);
+		
 		try {
-
-			cartaoBloqueadoComSucesso = cartoes.bloqueioCartao(bloqueioCartao.getNumeroCartao(), solicitacao);
-
+			repository.save(aviso);
 		} catch (Exception e) {
-			logger.error("Não foi possível notificar o sistema legado do banco, tente novamente.");
-			throw e;
-
+			logger.error("Ocorreu algum problema: " + e);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-
-		return cartaoBloqueadoComSucesso;
-
+		
+		logger.info("Aviso de viagem armazenado no sistema com sucesso.");
+		return ResponseEntity.ok().build();
 	}
 
 	private String pegaIpClient(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
@@ -101,5 +84,4 @@ public class BloqueioController {
 
 		return objectPayload.get("clientAddress").toString();
 	}
-
 }
