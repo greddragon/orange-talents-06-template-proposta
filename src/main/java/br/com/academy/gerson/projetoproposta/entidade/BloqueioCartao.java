@@ -22,6 +22,11 @@ public class BloqueioCartao {
 	private String userAgent;
 
 	private LocalDateTime instanteBloqueio;
+	
+	@Deprecated
+	public BloqueioCartao() {
+		
+	}
 
 	public BloqueioCartao(String numeroCartao, String ipCliente, String userAgent) {
 		super();

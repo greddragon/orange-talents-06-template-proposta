@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
+import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoBloqueio;
 import br.com.academy.gerson.projetoproposta.entidade.BloqueioCartao;
 import br.com.academy.gerson.projetoproposta.repositorio.BloqueioCartaoRepository;
 
@@ -59,8 +60,29 @@ public class BloqueioController {
 		String ipCliente = pegaIpClient(request);
 		BloqueioCartao bloqueioCartao = new BloqueioCartao(id_cartao, ipCliente, userAgent);
 
+		Map<String, Object> cartaoBloqueadoComSucesso = bloquearCartao(bloqueioCartao);
+		
 		repository.save(bloqueioCartao);
+		logger.info("bloqueio do cartão: " + cartaoBloqueadoComSucesso);
 		return ResponseEntity.ok().build();
+	}
+
+	private Map<String, Object> bloquearCartao(BloqueioCartao bloqueioCartao) {
+		
+		SolicitacaoBloqueio solicitacao = new SolicitacaoBloqueio(bloqueioCartao.getUserAgent());
+		Map<String, Object> cartaoBloqueadoComSucesso = null;
+		try {
+
+			cartaoBloqueadoComSucesso = cartoes.bloqueioCartao(bloqueioCartao.getNumeroCartao(),solicitacao);
+
+		} catch (Exception e) {
+			 logger.error("Não foi possível notificar o sistema legado do banco, tente novamente.");
+			 throw e;
+			
+		}
+		
+		return cartaoBloqueadoComSucesso;
+		
 	}
 
 	private String pegaIpClient(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
