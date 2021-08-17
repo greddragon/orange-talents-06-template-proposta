@@ -78,7 +78,8 @@ public class AvisoViagemController {
 		try {
 			avisoViagemComSucesso = cartoes.avisoViagem(id_cartao, solicitacao);
 		} catch (Exception e) {
-			logger.error("Não foi possível realizar o aviso de viagem, tente novamente. Talvez a data já esteja cadastrada");
+			logger.error(
+					"Não foi possível realizar o aviso de viagem, tente novamente. Talvez a data já esteja cadastrada");
 			throw new ErroException(HttpStatus.INTERNAL_SERVER_ERROR, "Data já cadastrada, não pode haver iguais");
 		}
 

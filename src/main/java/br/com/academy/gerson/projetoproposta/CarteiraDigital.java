@@ -30,8 +30,7 @@ public class CarteiraDigital {
 
 	}
 
-	public CarteiraDigital(@NotBlank String numeroCartao, @Email @NotBlank String email,
-			 CarteiraEnum carteira) {
+	public CarteiraDigital(@NotBlank String numeroCartao, @Email @NotBlank String email, CarteiraEnum carteira) {
 		super();
 		this.numeroCartao = numeroCartao;
 		this.email = email;

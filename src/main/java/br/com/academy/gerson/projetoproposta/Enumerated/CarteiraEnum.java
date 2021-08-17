@@ -1,6 +1,6 @@
 package br.com.academy.gerson.projetoproposta.Enumerated;
 
 public enum CarteiraEnum {
-	
-	Paypal;
+
+	Paypal, Samsung_Pay;
 }

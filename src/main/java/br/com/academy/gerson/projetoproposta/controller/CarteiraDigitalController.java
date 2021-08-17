@@ -1,8 +1,11 @@
 package br.com.academy.gerson.projetoproposta.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -35,10 +38,11 @@ public class CarteiraDigitalController {
 	@Autowired
 	private CarteiraDigitalRepository repository;
 
-	@PostMapping("paypal/{id_cartao}")
+	@PostMapping(value = { "paypal/{id_cartao}", "samsung_pay/{id_cartao}" })
 	@Transactional
 	public ResponseEntity<?> carteiraPaypal(@PathVariable String id_cartao,
-			@RequestBody @Valid SolicitacaoInclusaoCarteira inclusaoCarteira, UriComponentsBuilder builder) {
+			@RequestBody @Valid SolicitacaoInclusaoCarteira inclusaoCarteira, HttpServletRequest request,
+			UriComponentsBuilder builder) throws URISyntaxException {
 
 		try {
 			cartoes.consultaNumeroCartao(id_cartao);
@@ -47,7 +51,8 @@ public class CarteiraDigitalController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 
-		Optional<CarteiraDigital> carteiraJaAssociada = repository.FindCarteiraDigital(id_cartao);
+		Optional<CarteiraDigital> carteiraJaAssociada = repository.FindCarteiraDigital(id_cartao,
+				inclusaoCarteira.getCarteiraConsulta());
 		if (carteiraJaAssociada.isPresent()) {
 			logger.error("cartão já esta associado a está carteria");
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
@@ -58,9 +63,28 @@ public class CarteiraDigitalController {
 		CarteiraDigital carteira = inclusaoCarteira.toInclusao(id_cartao);
 
 		repository.save(carteira);
-		logger.info("Aviso de viagem armazenado no sistema com sucesso.");
-		logger.info("Aviso de viagem: " + carteiraAssociadaComSucesso);
-		return ResponseEntity.ok().body(carteira);
+
+		URI uri = pegaURL(request, builder, carteira);
+
+		logger.info("Carteira associada armazenada no sistema com sucesso.");
+		logger.info("Cateria Associada: " + carteiraAssociadaComSucesso);
+		return ResponseEntity.created(uri).build();
+	}
+
+	private URI pegaURL(HttpServletRequest request, UriComponentsBuilder builder, CarteiraDigital carteira) {
+
+		String[] partesUrl = request.getRequestURI().toString().split("\\/");
+		int contador = 0;
+		String url = "";
+		while (contador < partesUrl.length - 1) {
+
+			url += partesUrl[contador];
+			url += "/";
+			contador++;
+
+		}
+
+		return builder.path(url + "{id}").build(carteira.getId());
 	}
 
 	private Map<String, Object> associaCarteira(String id_cartao, @Valid SolicitacaoInclusaoCarteira inclusaoCarteira) {

@@ -28,9 +28,13 @@ public class SolicitacaoInclusaoCarteira {
 		return carteira;
 	}
 
+	public CarteiraEnum getCarteiraConsulta() {
+		return CarteiraEnum.valueOf(this.carteira);
+	}
+
 	public CarteiraDigital toInclusao(String numeroCartao) {
 		CarteiraEnum carteira = CarteiraEnum.valueOf(this.carteira);
-		return new CarteiraDigital(numeroCartao,email,carteira);
+		return new CarteiraDigital(numeroCartao, email, carteira);
 	}
 
 }
