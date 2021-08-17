@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import br.com.academy.gerson.projetoproposta.Dto.SolicitacaoInclusaoCarteira;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.ModelFeignProposta;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoAvisoViagem;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoBloqueio;
@@ -32,5 +33,10 @@ public interface FeignApiCartoes {
 	
 	@PostMapping(value = "api/cartoes/{id}/avisos", consumes="application/json")
 	Map<String, Object> avisoViagem(@PathVariable String id, @RequestBody @Valid  SolicitacaoAvisoViagem aviso);
+	
+	@PostMapping(value = "api/cartoes/{id}/carteiras", consumes="application/json")
+	Map<String, Object> carteiraDigital(@PathVariable String id, @RequestBody @Valid  SolicitacaoInclusaoCarteira carteira);
+	
+	
 
 }
