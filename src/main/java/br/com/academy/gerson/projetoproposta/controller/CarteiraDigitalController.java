@@ -21,14 +21,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.academy.gerson.projetoproposta.CarteiraDigital;
 import br.com.academy.gerson.projetoproposta.Dto.SolicitacaoInclusaoCarteira;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
+import br.com.academy.gerson.projetoproposta.entidade.CarteiraDigital;
 import br.com.academy.gerson.projetoproposta.repositorio.CarteiraDigitalRepository;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/cartao/carteira")
 public class CarteiraDigitalController {
+
+	private final Tracer tracer;
+
+	public CarteiraDigitalController(Tracer tracer) {
+		this.tracer = tracer;
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -43,6 +51,10 @@ public class CarteiraDigitalController {
 	public ResponseEntity<?> carteiraPaypal(@PathVariable String id_cartao,
 			@RequestBody @Valid SolicitacaoInclusaoCarteira inclusaoCarteira, HttpServletRequest request,
 			UriComponentsBuilder builder) throws URISyntaxException {
+
+		Span span = tracer.activeSpan();
+		span.setTag("user.email", "carteiraDigital@post.com");
+		span.setBaggageItem("user.email", "carteiraDigital@post.com");
 
 		try {
 			cartoes.consultaNumeroCartao(id_cartao);

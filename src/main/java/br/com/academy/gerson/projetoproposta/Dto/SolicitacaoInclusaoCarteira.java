@@ -3,8 +3,8 @@ package br.com.academy.gerson.projetoproposta.Dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import br.com.academy.gerson.projetoproposta.CarteiraDigital;
 import br.com.academy.gerson.projetoproposta.Enumerated.CarteiraEnum;
+import br.com.academy.gerson.projetoproposta.entidade.CarteiraDigital;
 
 public class SolicitacaoInclusaoCarteira {
 

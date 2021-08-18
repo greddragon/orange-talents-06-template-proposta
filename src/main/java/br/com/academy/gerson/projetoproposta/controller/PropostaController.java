@@ -27,10 +27,18 @@ import br.com.academy.gerson.projetoproposta.controller.handlerAdvice.ErroExcept
 import br.com.academy.gerson.projetoproposta.entidade.Proposta;
 import br.com.academy.gerson.projetoproposta.repositorio.PropostaRepository;
 import br.com.academy.gerson.projetoproposta.service.PropostaService;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/propostas")
 public class PropostaController {
+
+	private final Tracer tracer;
+
+	public PropostaController(Tracer tracer) {
+		this.tracer = tracer;
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(PropostaController.class);
 
@@ -44,6 +52,10 @@ public class PropostaController {
 	@Transactional
 	public ResponseEntity<?> cadastro(@RequestBody @Valid PropostaDto propostaDto, UriComponentsBuilder uriBuilder)
 			throws JsonMappingException, JsonProcessingException {
+
+		Span activeSpan = tracer.activeSpan();
+		activeSpan.setTag("user.email", "proposta@post.com");
+		activeSpan.setBaggageItem("user.email", "proposta@post.com");
 
 		Proposta proposta = propostaDto.toProposta();
 		Optional<Proposta> propostaJaExiste = repository.findByDocumento(proposta.getDocumento());
@@ -66,6 +78,10 @@ public class PropostaController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> consultaProposta(@PathVariable Long id) {
+
+		Span activeSpan = tracer.activeSpan();
+		activeSpan.setTag("user.email", "proposta@get.com");
+		activeSpan.setBaggageItem("user.email", "proposta@get.com");
 
 		Optional<Proposta> proposta = repository.findById(id);
 

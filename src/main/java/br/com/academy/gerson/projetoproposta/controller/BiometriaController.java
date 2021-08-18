@@ -23,10 +23,18 @@ import br.com.academy.gerson.projetoproposta.Dto.BiometriaDto;
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
 import br.com.academy.gerson.projetoproposta.entidade.Biometria;
 import br.com.academy.gerson.projetoproposta.repositorio.BiometriaRepository;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/proposta/biometria/")
 public class BiometriaController {
+
+	private final Tracer tracer;
+
+	public BiometriaController(Tracer tracer) {
+		this.tracer = tracer;
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -40,6 +48,10 @@ public class BiometriaController {
 	@Transactional
 	public ResponseEntity<?> CadastroBiometria(@PathVariable String idCartao, @RequestBody BiometriaDto dto,
 			UriComponentsBuilder uriBuilder) {
+
+		Span span = tracer.activeSpan();
+		span.setTag("user.email", "biometria@post.com");
+		span.setBaggageItem("user.email", "biometria@post.com");
 
 		if (!isValid(dto.getBiometria())) {
 			logger.error("biometria inválida.");

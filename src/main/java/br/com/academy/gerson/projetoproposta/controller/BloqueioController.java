@@ -25,10 +25,18 @@ import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCart
 import br.com.academy.gerson.projetoproposta.controller.feignClient.model.SolicitacaoBloqueio;
 import br.com.academy.gerson.projetoproposta.entidade.BloqueioCartao;
 import br.com.academy.gerson.projetoproposta.repositorio.BloqueioCartaoRepository;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/cartao/bloqueio")
 public class BloqueioController {
+
+	private final Tracer tracer;
+
+	public BloqueioController(Tracer tracer) {
+		this.tracer = tracer;
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,6 +50,10 @@ public class BloqueioController {
 	@Transactional
 	public ResponseEntity<?> bloqueioCartao(@PathVariable String id_cartao, HttpServletRequest request)
 			throws JsonMappingException, JsonProcessingException {
+
+		Span span = tracer.activeSpan();
+		span.setTag("user.email", "bloqueioCartao@post.com");
+		span.setBaggageItem("user.email", "bloqueioCartao@post.com");
 
 		try {
 			cartoes.consultaNumeroCartao(id_cartao);

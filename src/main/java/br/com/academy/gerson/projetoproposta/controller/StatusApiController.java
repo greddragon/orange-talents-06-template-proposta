@@ -12,10 +12,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignActuator;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/propostas/saude-api")
 public class StatusApiController {
+
+	private final Tracer tracer;
+
+	public StatusApiController(Tracer tracer) {
+		this.tracer = tracer;
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -24,6 +32,10 @@ public class StatusApiController {
 
 	@GetMapping
 	public ResponseEntity<?> saudeApi() {
+
+		Span span = tracer.activeSpan();
+		span.setTag("user.email", "saude-api@get.com");
+		span.setBaggageItem("user.email", "saude-api@get.com");
 
 		Map<String, Object> status = health.healthStatus();
 

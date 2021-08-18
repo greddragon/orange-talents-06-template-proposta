@@ -27,10 +27,19 @@ import br.com.academy.gerson.projetoproposta.controller.feignClient.model.Solici
 import br.com.academy.gerson.projetoproposta.controller.handlerAdvice.ErroException;
 import br.com.academy.gerson.projetoproposta.entidade.AvisoViagem;
 import br.com.academy.gerson.projetoproposta.repositorio.AvisoViagemRepository;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController
 @RequestMapping("api/cartao/aviso")
 public class AvisoViagemController {
+
+	private final Tracer tracer;
+
+	public AvisoViagemController(Tracer tracer) {
+		this.tracer = tracer;
+
+	}
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -45,6 +54,10 @@ public class AvisoViagemController {
 	public ResponseEntity<?> avisoViagem(@PathVariable String id_cartao,
 			@RequestBody @Valid SolicitacaoAvisoViagem solicitacao, HttpServletRequest request)
 			throws JsonMappingException, JsonProcessingException {
+
+		Span span = tracer.activeSpan();
+		span.setTag("user.email", "avisoViagem@post.com");
+		span.setBaggageItem("user.email", "avisoViagem@post.com");
 
 		try {
 			cartoes.consultaNumeroCartao(id_cartao);

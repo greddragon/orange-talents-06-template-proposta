@@ -1,4 +1,4 @@
-package br.com.academy.gerson.projetoproposta;
+package br.com.academy.gerson.projetoproposta.entidade;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
