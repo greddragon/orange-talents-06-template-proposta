@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.security.crypto.encrypt.TextEncryptor;
+
 import br.com.academy.gerson.projetoproposta.entidade.Proposta;
 import br.com.academy.gerson.projetoproposta.validacao.CpfCjpj;
 
@@ -56,9 +58,9 @@ public class PropostaDto {
 		return endereco;
 	}
 
-	public Proposta toProposta() {
+	public Proposta toProposta(TextEncryptor encryptor) {
 
-		return new Proposta(nome, documento, email, salario, endereco);
+		return new Proposta(nome, encryptor.encrypt(documento), email, salario, endereco);
 
 	}
 

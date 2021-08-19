@@ -98,6 +98,12 @@ public class Proposta {
 	public void setNumeroCartao(String numeroCartao) {
 		this.numeroCartao = numeroCartao;
 	}
+	
+	
+	
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
 
 	public void analiseProposta(PropostaService propostaService) throws JsonMappingException, JsonProcessingException {
 

@@ -1,18 +1,16 @@
 package br.com.academy.gerson.projetoproposta.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Base64;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import br.com.academy.gerson.projetoproposta.controller.feignClient.FeignApiCartoes;
 
@@ -49,7 +47,28 @@ class PropostaControllerTest {
 		 * 
 		 * Assert.assertEquals(string, cartao.get("id").toString());
 		 */
+		
+		/*
+		 * String originalInput = "test input"; String encodedString =
+		 * Base64.getEncoder().encodeToString(originalInput.getBytes());
+		 * 
+		 * System.out.println("\n\n\n\n"+encodedString+"\n\n\n\n");
+		 * 
+		 * byte[] decodedBytes = Base64.getDecoder().decode(encodedString); String
+		 * decodedString = new String(decodedBytes);String test =
+		 * Base64.getDecoder().decode(encodedString).toString();
+		 * 
+		 * System.out.println("\n\n\n\n"+decodedString+"\n\n\n\n");
+		 */
 
+		  TextEncryptor encryptor = Encryptors.text("password", "5c0744940b5c369b");
+		  String result = encryptor.encrypt("text");
+		  System.out.println("\n\n\n\n"+result+"\n\n\n\n");
+		  
+		  String result2 = encryptor.decrypt(result);
+		  
+		  System.out.println("\n\n\n\n"+result2+"\n\n\n\n");
+		
 	}
 
 }
